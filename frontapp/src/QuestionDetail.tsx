@@ -6,11 +6,14 @@ import { Question } from "./types.ts";
 const QuestionDetail = () => {
   let param = useParams();
 
-  useEffect(() => {
+  const getQuestionById = () => {
     axios.get(`/api/question/detail/${param.index}`).then((res) => {
       setQuestion(res.data);
-      console.log(question);
     });
+  };
+
+  useEffect(() => {
+    getQuestionById();
   }, []);
 
   const handleSumbit = (e: any) => {
@@ -22,10 +25,7 @@ const QuestionDetail = () => {
         params: { content: content },
       })
       .then(() => {
-        axios.get(`/api/question/detail/${param.index}`).then((res) => {
-          setQuestion(res.data);
-          console.log(question);
-        });
+        getQuestionById();
       });
   };
 
@@ -33,20 +33,41 @@ const QuestionDetail = () => {
 
   return (
     <>
-      <h1>{question?.subject}</h1>
-      <div>{question?.content}</div>
-      <h5>{question?.answerList.length}개의 답변이 있습니다.</h5>
-      <div>
-        <ul>
-          {question?.answerList.map((answer) => {
-            return <li>{answer.content}</li>;
-          })}
-        </ul>
+      <div className="flex flex-col w-screen px-5">
+        <h1 className="text-2xl font-bold">{question?.subject}</h1>
+        <div className="divider" />
+        <div className="flex-col mb-5 place-content-between h-20 card bg-base-300 rounded-box">
+          <p className="p-2">{question?.content}</p>
+          <div className="self-end m-2 badge badge-md badge-neutral">
+            {question?.createDate}
+          </div>
+        </div>
+        <h5 className="text-xl font-bold">
+          {question?.answerList.length}개의 답변이 있습니다.
+        </h5>
+        <div className="divider" />
+        {question?.answerList.map((answer) => {
+          return (
+            <div className="flex-col mb-5 place-content-between h-20 card bg-base-300 rounded-box">
+              <p className="p-2">{answer.content}</p>
+              <div className="self-end m-2 badge badge-md badge-neutral">
+                {answer.createDate}
+              </div>
+            </div>
+          );
+        })}
+        <form onSubmit={handleSumbit}>
+          <textarea
+            className="textarea textarea-bordered w-full"
+            name="content"
+            id="content"
+            rows={10}
+          ></textarea>
+          <button className="btn w-full" type="submit">
+            답변등록
+          </button>
+        </form>
       </div>
-      <form onSubmit={handleSumbit}>
-        <textarea name="content" id="content" rows={15}></textarea>
-        <input type="submit" value="답변등록" />
-      </form>
     </>
   );
 };
