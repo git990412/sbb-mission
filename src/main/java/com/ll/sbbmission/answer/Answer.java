@@ -1,5 +1,6 @@
 package com.ll.sbbmission.answer;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ll.sbbmission.question.Question;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,5 +22,6 @@ public class Answer {
     private LocalDateTime createDate;
 
     @ManyToOne
+    @JsonBackReference
     private Question question;
 }

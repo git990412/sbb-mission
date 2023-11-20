@@ -1,5 +1,6 @@
 package com.ll.sbbmission.question;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ll.sbbmission.answer.Answer;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -25,5 +26,6 @@ public class Question {
     private LocalDateTime createDate;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     private List<Answer> answerList;
 }
