@@ -9,10 +9,10 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class QuestionRestController {
-    private final QuestionRepository questionRepository;
+    private final QuestionService questionService;
 
     @GetMapping("/api/question/list")
     public List<Question> list() {
-        return this.questionRepository.findAll();
+        return this.questionService.getList();
     }
 }
