@@ -1,20 +1,24 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "./app/hooks.ts";
+import {
+  selectQuestions,
+  updateQuestions,
+} from "./app/feature/QuestionListSlice.ts";
 import { Question } from "./types.ts";
+import QuestionRegistry from "./QuestionRegistry.tsx";
 
 const QuestionList = () => {
-  useEffect(() => {
-    axios.get("/api/question/list").then((res) => {
-      setQuestionList(res.data);
-    });
-  }, []);
+  const questionList: Question[] = useAppSelector(selectQuestions);
+  const dispatch = useAppDispatch();
 
-  const [questionList, setQuestionList] = useState<Question[]>();
+  useEffect(() => {
+    dispatch(updateQuestions());
+  }, []);
 
   return (
     <>
-      <div className="overflow-x-auto w-screen h-screen  flex flex-col justify-start px-5">
-        <table className="table">
+      <div className="overflow-x-auto w-screen h-screen  flex flex-col items-center justify-start px-5">
+        <table className="table mb-5">
           {/* head */}
           <thead>
             <tr className="bg-slate-800 text-white">
@@ -35,6 +39,15 @@ const QuestionList = () => {
             })}
           </tbody>
         </table>
+        <button
+          className="btn btn-neutral w-2/3"
+          onClick={() =>
+            (document.getElementById("addQuestion") as any).showModal()
+          }
+        >
+          질문 등록하기
+        </button>
+        <QuestionRegistry />
       </div>
     </>
   );

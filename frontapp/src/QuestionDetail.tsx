@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Question } from "./types.ts";
+import { Err, Question } from "./types.ts";
 
 const QuestionDetail = () => {
   let param = useParams();
@@ -26,10 +26,20 @@ const QuestionDetail = () => {
       })
       .then(() => {
         getQuestionById();
+      })
+      .catch((error) => {
+        setErr({
+          error: true,
+          message: error.response.data.message,
+        });
       });
   };
 
   const [question, setQuestion] = useState<Question>();
+  const [err, setErr] = useState<Err>({
+    error: false,
+    message: "",
+  });
 
   return (
     <>
@@ -39,7 +49,7 @@ const QuestionDetail = () => {
         <div className="flex-col mb-5 place-content-between h-20 card bg-base-300 rounded-box">
           <p className="p-2">{question?.content}</p>
           <div className="self-end m-2 badge badge-md badge-neutral">
-            {question?.createDate}
+            {new Date(question?.createDate).toLocaleDateString()}
           </div>
         </div>
         <h5 className="text-xl font-bold">
@@ -51,18 +61,39 @@ const QuestionDetail = () => {
             <div className="flex-col mb-5 place-content-between h-20 card bg-base-300 rounded-box">
               <p className="p-2">{answer.content}</p>
               <div className="self-end m-2 badge badge-md badge-neutral">
-                {answer.createDate}
+                {new Date(answer.createDate).toLocaleDateString()}
               </div>
             </div>
           );
         })}
         <form onSubmit={handleSumbit}>
           <textarea
-            className="textarea textarea-bordered w-full"
+            className="textarea textarea-bordered w-full mb-5"
             name="content"
             id="content"
             rows={10}
           ></textarea>
+          <div
+            role="alert"
+            className={`alert alert-error ${
+              err.error ? "flex" : "hidden"
+            } mb-5`}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="stroke-current shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>{err.message}</span>
+          </div>
           <button className="btn w-full" type="submit">
             답변등록
           </button>

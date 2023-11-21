@@ -11,3 +11,8 @@ export type Answer = {
   content: string;
   createDate: Date;
 };
+
+export type Err = {
+  error: boolean;
+  message: string;
+};
