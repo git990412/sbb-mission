@@ -55,7 +55,12 @@ const QuestionList = () => {
                   key={key}
                 >
                   <th>{question.id}</th>
-                  <td>{question.subject}</td>
+                  <td>
+                    {question.subject}
+                    <div className="badge badge-neutral ml-5">
+                      {question.answerList.length}
+                    </div>
+                  </td>
                   <td>{new Date(question.createDate).toLocaleDateString()}</td>
                 </tr>
               );
