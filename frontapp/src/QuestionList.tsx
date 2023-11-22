@@ -83,6 +83,7 @@ const QuestionList = () => {
                       currentPage == i ? "btn-active" : ""
                     }`}
                     onClick={() => dispatch(updateQuestions(i))}
+                    key={i}
                   >
                     {i}
                   </button>

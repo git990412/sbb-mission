@@ -49,7 +49,7 @@ const QuestionDetail = () => {
         <div className="flex-col mb-5 place-content-between h-20 card bg-base-300 rounded-box">
           <p className="p-2">{question?.content}</p>
           <div className="self-end m-2 badge badge-md badge-neutral">
-            {new Date(question?.createDate).toLocaleDateString()}
+            {new Date(question?.createDate as any).toLocaleDateString()}
           </div>
         </div>
         <h5 className="text-xl font-bold">
