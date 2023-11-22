@@ -6,10 +6,12 @@ import {
 } from "./app/feature/QuestionListSlice.ts";
 import { Question } from "./types.ts";
 import QuestionRegistry from "./QuestionRegistry.tsx";
+import { useNavigate } from "react-router-dom";
 
 const QuestionList = () => {
   const questionList: Question[] = useAppSelector(selectQuestions);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(updateQuestions());
@@ -17,7 +19,7 @@ const QuestionList = () => {
 
   return (
     <>
-      <div className="overflow-x-auto w-screen h-screen  flex flex-col items-center justify-start px-5">
+      <div className="overflow-x-auto w-screen flex flex-col items-center justify-start px-5">
         <table className="table mb-5">
           {/* head */}
           <thead>
@@ -30,7 +32,12 @@ const QuestionList = () => {
           <tbody>
             {questionList?.map((question) => {
               return (
-                <tr className="hover cursor-pointer">
+                <tr
+                  className="hover cursor-pointer"
+                  onClick={() => {
+                    navigate(`/question/detail/${question.id}`);
+                  }}
+                >
                   <th>{question.id}</th>
                   <td>{question.subject}</td>
                   <td>{new Date(question.createDate).toLocaleDateString()}</td>
