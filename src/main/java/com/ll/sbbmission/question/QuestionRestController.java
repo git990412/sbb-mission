@@ -3,16 +3,13 @@ package com.ll.sbbmission.question;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -38,8 +35,9 @@ public class QuestionRestController {
     }
 
     @GetMapping("/api/question/list")
-    public List<Question> list() {
-        return this.questionService.getList();
+    public Page<Question> list(@RequestParam(value = "page", defaultValue = "0") int page) {
+        Page<Question> paging = this.questionService.getList(page);
+        return paging;
     }
 
     @GetMapping(value = "/api/question/detail/{id}")
