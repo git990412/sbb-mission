@@ -1,10 +1,17 @@
-import { ReactNode, useState } from "react";
+import { MouseEventHandler, ReactNode, useState } from "react";
+import SignUpDialog from "./SignUpDialog.tsx";
 
 const Navbar = () => {
   const [hidden, setHidden] = useState(true);
-  const MenuItem = (props: { children: ReactNode }) => {
+  const MenuItem = (props: {
+    children: ReactNode;
+    onClick: MouseEventHandler<HTMLDivElement>;
+  }) => {
     return (
-      <div className="hover:cursor-pointer hover:bg-neutral-content py-6 w-full text-center">
+      <div
+        className="hover:cursor-pointer hover:bg-neutral-content py-6 w-full text-center"
+        onClick={props.onClick}
+      >
         {props.children}
       </div>
     );
@@ -61,7 +68,15 @@ const Navbar = () => {
       >
         <MenuItem>List</MenuItem>
         <MenuItem>Login</MenuItem>
+        <MenuItem
+          onClick={() => {
+            (document.getElementById("signUpModal") as any).showModal();
+          }}
+        >
+          SignUp
+        </MenuItem>
       </div>
+      <SignUpDialog />
     </div>
   );
 };

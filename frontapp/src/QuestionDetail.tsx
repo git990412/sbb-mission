@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import axios from "axios";
 import { Err, Question } from "./types.ts";
 
@@ -41,29 +41,37 @@ const QuestionDetail = () => {
     message: "",
   });
 
+  const TextBox = (props: { children: ReactNode }) => {
+    return (
+      <div className="flex-col mb-5 place-content-between h-20 card bg-base-300 rounded-box p-4">
+        {props.children}
+      </div>
+    );
+  };
+
   return (
     <>
       <div className="flex flex-col w-screen px-5">
         <h1 className="text-2xl font-bold">{question?.subject}</h1>
         <div className="divider" />
-        <div className="flex-col mb-5 place-content-between h-20 card bg-base-300 rounded-box">
-          <p className="p-2">{question?.content}</p>
-          <div className="self-end m-2 badge badge-md badge-neutral">
+        <TextBox>
+          <p>{question?.content}</p>
+          <div className="self-end  badge badge-md badge-neutral">
             {new Date(question?.createDate as any).toLocaleDateString()}
           </div>
-        </div>
+        </TextBox>
         <h5 className="text-xl font-bold">
           {question?.answerList.length}개의 답변이 있습니다.
         </h5>
         <div className="divider" />
         {question?.answerList.map((answer) => {
           return (
-            <div className="flex-col mb-5 place-content-between h-20 card bg-base-300 rounded-box">
-              <p className="p-2">{answer.content}</p>
-              <div className="self-end m-2 badge badge-md badge-neutral">
+            <TextBox>
+              <p>{answer.content}</p>
+              <div className="self-end badge badge-md badge-neutral">
                 {new Date(answer.createDate).toLocaleDateString()}
               </div>
-            </div>
+            </TextBox>
           );
         })}
         <form onSubmit={handleSumbit}>
