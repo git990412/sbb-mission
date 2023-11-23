@@ -44,6 +44,7 @@ const QuestionList = () => {
             <tr className="bg-slate-800 text-white">
               <th>번호</th>
               <th>제목</th>
+              <th>글쓴이</th>
               <th>작성일시</th>
             </tr>
           </thead>
@@ -64,6 +65,7 @@ const QuestionList = () => {
                       {question.answerList.length}
                     </div>
                   </td>
+                  <td>{question.author ? question.author.username : "null"}</td>
                   <td>{new Date(question.createDate).toLocaleDateString()}</td>
                 </tr>
               );

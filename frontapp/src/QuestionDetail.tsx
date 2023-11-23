@@ -5,7 +5,7 @@ import { Err, Question } from "./types.ts";
 
 const TextBox = (props: { children: ReactNode }) => {
   return (
-    <div className="flex-col mb-5 place-content-between h-20 card bg-base-300 rounded-box p-4">
+    <div className="flex-col mb-5 place-content-between card bg-base-300 rounded-box p-4">
       {props.children}
     </div>
   );
@@ -68,7 +68,9 @@ const QuestionDetail = () => {
           return (
             <TextBox>
               <p>{answer.content}</p>
-              <div className="self-end badge badge-md badge-neutral">
+              <div className="self-end badge badge-md h-auto badge-neutral">
+                {answer.author ? answer.author.username : "null"}
+                <br />
                 {new Date(answer.createDate).toLocaleDateString()}
               </div>
             </TextBox>

@@ -1,5 +1,6 @@
 package com.ll.sbbmission.user;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -8,9 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.security.Principal;
 
 @RequiredArgsConstructor
 @RestController
@@ -42,20 +46,12 @@ public class UserRestController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<Object> authenticateUser(@Valid LoginForm loginForm, BindingResult bindingResult) {
-//        if (bindingResult.hasErrors()) {
-//            return ResponseEntity.badRequest().body(bindingResult.getAllErrors().getLast().toString());
-//        }
-//        Authentication authentication = this.authenticationManager
-//                .authenticate(new UsernamePasswordAuthenticationToken(loginForm.getUsername(), loginForm.getPassword()));
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//        return ResponseEntity.ok(authentication.getPrincipal());
-//    }
-//
-//    @PostMapping("/logout")
-//    public void logOut(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
-//        this.logoutHandler.logout(request, response, authentication);
-//    }
+    @GetMapping("/isLogin")
+    public void isLogin(HttpServletResponse response, Principal principal) {
+        if (principal == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        } else {
+            response.setStatus(HttpServletResponse.SC_OK);
+        }
+    }
 }
