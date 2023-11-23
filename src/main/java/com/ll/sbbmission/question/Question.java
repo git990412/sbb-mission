@@ -2,6 +2,7 @@ package com.ll.sbbmission.question;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ll.sbbmission.answer.Answer;
+import com.ll.sbbmission.user.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,4 +29,7 @@ public class Question {
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<Answer> answerList;
+
+    @ManyToOne
+    private SiteUser author;
 }

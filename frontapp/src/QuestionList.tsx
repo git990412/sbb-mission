@@ -9,6 +9,7 @@ import {
 import { Question } from "./types.ts";
 import QuestionRegistry from "./QuestionRegistry.tsx";
 import { useNavigate } from "react-router-dom";
+import { selectStatus } from "./app/feature/LoginStatus.ts";
 
 const QuestionList = () => {
   const questionList: Question[] = useAppSelector(selectQuestions);
@@ -17,6 +18,8 @@ const QuestionList = () => {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const Login = useAppSelector(selectStatus);
 
   const pageUtil = (x: number) => {
     if (x % 5 === 0) {
@@ -104,9 +107,13 @@ const QuestionList = () => {
         </div>
         <button
           className="btn btn-neutral w-2/3"
-          onClick={() =>
-            (document.getElementById("addQuestion") as any).showModal()
-          }
+          onClick={() => {
+            if (Login) {
+              (document.getElementById("addQuestion") as any).showModal();
+            } else {
+              alert("로그인을 먼저 진행해주세요.");
+            }
+          }}
         >
           질문 등록하기
         </button>

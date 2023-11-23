@@ -2,6 +2,7 @@ package com.ll.sbbmission.answer;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ll.sbbmission.question.Question;
+import com.ll.sbbmission.user.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,4 +25,7 @@ public class Answer {
     @ManyToOne
     @JsonBackReference
     private Question question;
+
+    @ManyToOne
+    private SiteUser author;
 }

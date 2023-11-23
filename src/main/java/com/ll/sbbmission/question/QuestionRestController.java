@@ -1,7 +1,8 @@
 package com.ll.sbbmission.question;
 
+import com.ll.sbbmission.user.SiteUser;
+import com.ll.sbbmission.user.UserService;
 import jakarta.validation.Valid;
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,10 +18,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class QuestionRestController {
     private final QuestionService questionService;
-    private final Validator validator;
+    private final UserService userService;
 
     @PostMapping("api/question/create")
-    public ResponseEntity<Map<String, String>> questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult) {
+    public ResponseEntity<Map<String, String>> questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult, Principal principal) {
 
         Map<String, String> errors = new HashMap<>();
         if (bindingResult.hasErrors()) {
@@ -27,7 +29,8 @@ public class QuestionRestController {
             return ResponseEntity.badRequest().body(errors);
         }
 
-        this.questionService.create(questionForm.getSubject(), questionForm.getContent());
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        this.questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser);
 
         Map<String, String> successResponse = new HashMap<>();
         successResponse.put("message", "Question created successfully");

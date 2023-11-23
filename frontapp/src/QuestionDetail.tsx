@@ -3,6 +3,14 @@ import { ReactNode, useEffect, useState } from "react";
 import axios from "axios";
 import { Err, Question } from "./types.ts";
 
+const TextBox = (props: { children: ReactNode }) => {
+  return (
+    <div className="flex-col mb-5 place-content-between h-20 card bg-base-300 rounded-box p-4">
+      {props.children}
+    </div>
+  );
+};
+
 const QuestionDetail = () => {
   let param = useParams();
 
@@ -40,14 +48,6 @@ const QuestionDetail = () => {
     error: false,
     message: "",
   });
-
-  const TextBox = (props: { children: ReactNode }) => {
-    return (
-      <div className="flex-col mb-5 place-content-between h-20 card bg-base-300 rounded-box p-4">
-        {props.children}
-      </div>
-    );
-  };
 
   return (
     <>
