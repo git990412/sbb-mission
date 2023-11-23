@@ -8,11 +8,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
 public class Answer {
+    @ManyToMany
+    Set<SiteUser> voter;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -28,6 +32,5 @@ public class Answer {
 
     @ManyToOne
     private SiteUser author;
-
     private LocalDateTime modifyDate;
 }

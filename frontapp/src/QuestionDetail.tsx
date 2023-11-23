@@ -86,8 +86,21 @@ const QuestionDetail = () => {
                 삭제
               </button>
             </div>
-            <div className="badge badge-md rounded-md badge-neutral">
-              {timestamp(new Date(question?.createDate as any))}
+            <div>
+              <div
+                className={`badge badge-xs h-auto rounded-md leading-4 font-bold badge-neutral ${
+                  question?.modifyDate ? "inline-flex" : "hidden"
+                }`}
+              >
+                modified at
+                <br />
+                {timestamp(new Date(question?.modifyDate as any))}
+              </div>
+              <div className="ml-2 badge badge-xs h-auto rounded-md leading-4 font-bold badge-neutral">
+                {question?.author ? question.author.username : "null"}
+                <br />
+                {timestamp(new Date(question?.createDate as any))}
+              </div>
             </div>
           </div>
         </TextBox>
@@ -136,7 +149,7 @@ const QuestionDetail = () => {
                   >
                     modified at
                     <br className="p-5" />
-                    {timestamp(new Date(answer.createDate))}
+                    {timestamp(new Date(answer.modifyDate))}
                   </div>
                   <div className="ml-2 self-end badge badge-xs h-auto rounded-md leading-4 font-bold badge-neutral">
                     {answer.author ? answer.author.username : "null"}
