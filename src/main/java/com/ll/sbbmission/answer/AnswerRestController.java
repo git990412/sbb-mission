@@ -75,4 +75,14 @@ public class AnswerRestController {
         this.answerService.delete(answer);
         return ResponseEntity.ok().build();
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/vote/{id}")
+    public String answerVote(Principal principal, @PathVariable("id") Integer id) {
+        Answer answer = this.answerService.getAnswer(id);
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        this.answerService.vote(answer, siteUser);
+
+        return "ok";
+    }
 }

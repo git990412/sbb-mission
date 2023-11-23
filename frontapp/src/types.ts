@@ -6,6 +6,7 @@ export type Question = {
   author: { username: string };
   answerList: Answer[];
   modifyDate: Date;
+  voter: [];
 };
 
 export type Answer = {
@@ -14,6 +15,7 @@ export type Answer = {
   createDate: Date;
   author: { username: string };
   modifyDate: Date;
+  voter: [];
 };
 
 export type Err = {

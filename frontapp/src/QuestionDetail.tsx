@@ -53,6 +53,12 @@ const QuestionDetail = () => {
   });
   const navigate = useNavigate();
 
+  const onRemove = (apiPath: string) => {
+    if (window.confirm("정말로 추천하시겠습니까?")) {
+      axios.get(apiPath);
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col w-screen px-5">
@@ -104,61 +110,83 @@ const QuestionDetail = () => {
             </div>
           </div>
         </TextBox>
+        <button
+          className="btn btn-neutral btn-md w-1/3 text-white ml-auto mb-5"
+          onClick={() => {
+            onRemove(`/api/question/vote/${question?.id}`);
+          }}
+        >
+          추천
+          <div className="badge">
+            +{question?.voter ? question.voter.length : "0"}
+          </div>
+        </button>
         <h5 className="text-xl font-bold">
           {question?.answerList.length}개의 답변이 있습니다.
         </h5>
         <div className="divider" />
         {question?.answerList.map((answer) => {
           return (
-            <TextBox>
-              <p>{answer.content}</p>
-              <div className="flex justify-between items-center mt-5">
-                <div>
-                  <button
-                    className="btn btn-neutral btn-xs"
-                    onClick={() => {
-                      (
-                        document.getElementById("modifyAnswer") as any
-                      ).showModal();
-                    }}
-                  >
-                    수정
-                  </button>
-                  <AnswerModifier index={answer?.id as number} />
-                  <button
-                    className="btn btn-neutral btn-xs ml-2"
-                    onClick={() => {
-                      axios
-                        .get(`/api/answer/delete/${answer?.id as number}`)
-                        .then(() => {
-                          navigate(`/question/detail/${param.index}`);
-                        })
-                        .catch(() => {
-                          alert("삭제 권한이 없습니다.");
-                        });
-                    }}
-                  >
-                    삭제
-                  </button>
-                </div>
-                <div className="flex">
-                  <div
-                    className={`self-end badge badge-xs h-auto rounded-md leading-4 font-bold badge-neutral ${
-                      answer.modifyDate ? "inline-flex" : "hidden"
-                    }`}
-                  >
-                    modified at
-                    <br className="p-5" />
-                    {timestamp(new Date(answer.modifyDate))}
+            <div className="flex flex-col">
+              <TextBox>
+                <p>{answer.content}</p>
+                <div className="flex justify-between items-center mt-5">
+                  <div>
+                    <button
+                      className="btn btn-neutral btn-xs"
+                      onClick={() => {
+                        (
+                          document.getElementById("modifyAnswer") as any
+                        ).showModal();
+                      }}
+                    >
+                      수정
+                    </button>
+                    <AnswerModifier index={answer?.id as number} />
+                    <button
+                      className="btn btn-neutral btn-xs ml-2"
+                      onClick={() => {
+                        axios
+                          .get(`/api/answer/delete/${answer?.id as number}`)
+                          .then(() => {
+                            navigate(`/question/detail/${param.index}`);
+                          })
+                          .catch(() => {
+                            alert("삭제 권한이 없습니다.");
+                          });
+                      }}
+                    >
+                      삭제
+                    </button>
                   </div>
-                  <div className="ml-2 self-end badge badge-xs h-auto rounded-md leading-4 font-bold badge-neutral">
-                    {answer.author ? answer.author.username : "null"}
-                    <br className="p-5" />
-                    {timestamp(new Date(answer.createDate))}
+                  <div className="flex">
+                    <div
+                      className={`self-end badge badge-xs h-auto rounded-md leading-4 font-bold badge-neutral ${
+                        answer.modifyDate ? "inline-flex" : "hidden"
+                      }`}
+                    >
+                      modified at
+                      <br className="p-5" />
+                      {timestamp(new Date(answer.modifyDate))}
+                    </div>
+                    <div className="ml-2 self-end badge badge-xs h-auto rounded-md leading-4 font-bold badge-neutral">
+                      {answer.author ? answer.author.username : "null"}
+                      <br className="p-5" />
+                      {timestamp(new Date(answer.createDate))}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </TextBox>
+              </TextBox>
+              <button
+                className="btn btn-neutral btn-md w-1/3 text-white ml-auto mb-10"
+                onClick={() => onRemove(`/api/answer/vote/${answer?.id}`)}
+              >
+                추천
+                <div className="badge">
+                  +{answer?.voter ? answer.voter.length : "0"}
+                </div>
+              </button>
+            </div>
           );
         })}
         <form onSubmit={handleSumbit}>
