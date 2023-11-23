@@ -1,21 +1,36 @@
 import { MouseEventHandler, ReactNode, useState } from "react";
 import SignUpDialog from "./SignUpDialog.tsx";
+import LoginDialog from "./LoginDialog.tsx";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { selectStatus, setLogin } from "../app/feature/LoginStatus.ts";
+import { useAppSelector } from "../app/hooks.ts";
+
+const MenuItem = (props: {
+  children: ReactNode | undefined;
+  onClick: MouseEventHandler<HTMLDivElement> | undefined;
+  className: string | undefined;
+}) => {
+  return (
+    <div
+      className={`hover:cursor-pointer hover:bg-neutral-content py-6 w-full text-center ${props.className}`}
+      onClick={props.onClick}
+    >
+      {props.children}
+    </div>
+  );
+};
+
+MenuItem.defaultProps = {
+  children: undefined,
+  onClick: undefined,
+  className: undefined,
+};
 
 const Navbar = () => {
   const [hidden, setHidden] = useState(true);
-  const MenuItem = (props: {
-    children: ReactNode;
-    onClick: MouseEventHandler<HTMLDivElement>;
-  }) => {
-    return (
-      <div
-        className="hover:cursor-pointer hover:bg-neutral-content py-6 w-full text-center"
-        onClick={props.onClick}
-      >
-        {props.children}
-      </div>
-    );
-  };
+  const dispatch = useDispatch();
+  const Login = useAppSelector(selectStatus);
 
   return (
     <div className="navbar bg-base-100 relative left-0 right-0 shadow-md">
@@ -67,7 +82,15 @@ const Navbar = () => {
         onMouseLeave={() => setHidden(true)}
       >
         <MenuItem>List</MenuItem>
-        <MenuItem>Login</MenuItem>
+        <MenuItem
+          onClick={() => {
+            (document.getElementById("loginModal") as any).showModal();
+          }}
+          className={`${Login ? "hidden" : "block"}`}
+        >
+          Login
+        </MenuItem>
+
         <MenuItem
           onClick={() => {
             (document.getElementById("signUpModal") as any).showModal();
@@ -75,8 +98,19 @@ const Navbar = () => {
         >
           SignUp
         </MenuItem>
+        <MenuItem
+          onClick={() => {
+            axios.post("/api/logout").then(() => {
+              dispatch(setLogin(false));
+            });
+          }}
+          className={`${Login ? "block" : "hidden"}`}
+        >
+          Logout
+        </MenuItem>
       </div>
       <SignUpDialog />
+      <LoginDialog />
     </div>
   );
 };

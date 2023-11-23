@@ -16,7 +16,7 @@ const QuestionRegistry = () => {
         },
       })
       .then(() => {
-        dispatch(updateQuestions());
+        dispatch(updateQuestions(0));
 
         setError({
           ...error,
