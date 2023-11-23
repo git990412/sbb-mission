@@ -1,7 +1,10 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ReactNode, useEffect, useState } from "react";
 import axios from "axios";
 import { Err, Question } from "./types.ts";
+import QuestionModifier from "./components/QuestionModifier.tsx";
+import AnswerModifier from "./components/AnswerModifier.tsx";
+import timestamp from "./util/timestamp.ts";
 
 const TextBox = (props: { children: ReactNode }) => {
   return (
@@ -48,6 +51,7 @@ const QuestionDetail = () => {
     error: false,
     message: "",
   });
+  const navigate = useNavigate();
 
   return (
     <>
@@ -56,8 +60,35 @@ const QuestionDetail = () => {
         <div className="divider" />
         <TextBox>
           <p>{question?.content}</p>
-          <div className="self-end  badge badge-md badge-neutral">
-            {new Date(question?.createDate as any).toLocaleDateString()}
+          <div className="flex justify-between items-center mt-5">
+            <div>
+              <button
+                className="btn btn-neutral btn-xs"
+                onClick={() => {
+                  (
+                    document.getElementById("modifyQuestion") as any
+                  ).showModal();
+                }}
+              >
+                수정
+              </button>
+              <QuestionModifier index={question?.id as number} />
+              <button
+                className="btn btn-neutral btn-xs ml-2"
+                onClick={() => {
+                  axios
+                    .get(`/api/question/delete/${question?.id as number}`)
+                    .then(() => {
+                      navigate("/question/list");
+                    });
+                }}
+              >
+                삭제
+              </button>
+            </div>
+            <div className="badge badge-md rounded-md badge-neutral">
+              {timestamp(new Date(question?.createDate as any))}
+            </div>
           </div>
         </TextBox>
         <h5 className="text-xl font-bold">
@@ -68,10 +99,51 @@ const QuestionDetail = () => {
           return (
             <TextBox>
               <p>{answer.content}</p>
-              <div className="self-end badge badge-md h-auto badge-neutral">
-                {answer.author ? answer.author.username : "null"}
-                <br />
-                {new Date(answer.createDate).toLocaleDateString()}
+              <div className="flex justify-between items-center mt-5">
+                <div>
+                  <button
+                    className="btn btn-neutral btn-xs"
+                    onClick={() => {
+                      (
+                        document.getElementById("modifyAnswer") as any
+                      ).showModal();
+                    }}
+                  >
+                    수정
+                  </button>
+                  <AnswerModifier index={answer?.id as number} />
+                  <button
+                    className="btn btn-neutral btn-xs ml-2"
+                    onClick={() => {
+                      axios
+                        .get(`/api/answer/delete/${answer?.id as number}`)
+                        .then(() => {
+                          navigate(`/question/detail/${param.index}`);
+                        })
+                        .catch(() => {
+                          alert("삭제 권한이 없습니다.");
+                        });
+                    }}
+                  >
+                    삭제
+                  </button>
+                </div>
+                <div className="flex">
+                  <div
+                    className={`self-end badge badge-xs h-auto rounded-md leading-4 font-bold badge-neutral ${
+                      answer.modifyDate ? "inline-flex" : "hidden"
+                    }`}
+                  >
+                    modified at
+                    <br className="p-5" />
+                    {timestamp(new Date(answer.createDate))}
+                  </div>
+                  <div className="ml-2 self-end badge badge-xs h-auto rounded-md leading-4 font-bold badge-neutral">
+                    {answer.author ? answer.author.username : "null"}
+                    <br className="p-5" />
+                    {timestamp(new Date(answer.createDate))}
+                  </div>
+                </div>
               </div>
             </TextBox>
           );

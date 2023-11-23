@@ -10,6 +10,7 @@ import { Question } from "./types.ts";
 import QuestionRegistry from "./QuestionRegistry.tsx";
 import { useNavigate } from "react-router-dom";
 import { selectStatus } from "./app/feature/LoginStatus.ts";
+import timestamp from "./util/timestamp.ts";
 
 const QuestionList = () => {
   const questionList: Question[] = useAppSelector(selectQuestions);
@@ -66,7 +67,7 @@ const QuestionList = () => {
                     </div>
                   </td>
                   <td>{question.author ? question.author.username : "null"}</td>
-                  <td>{new Date(question.createDate).toLocaleDateString()}</td>
+                  <td>{timestamp(new Date(question.createDate))}</td>
                 </tr>
               );
             })}

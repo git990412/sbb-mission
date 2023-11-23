@@ -25,7 +25,6 @@ export const updateQuestions = createAsyncThunk(
         page: page,
       },
     });
-    console.log(response.data);
     return response.data;
   },
 );

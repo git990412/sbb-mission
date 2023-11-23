@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 public class AnswerForm {
     @NotEmpty
-    public String content;
+    private String content;
 }

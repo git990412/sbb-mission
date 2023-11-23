@@ -8,11 +8,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.HashMap;
@@ -20,7 +18,7 @@ import java.util.HashMap;
 @RestController
 @RequestMapping("/api/answer")
 @RequiredArgsConstructor
-public class AnswerController {
+public class AnswerRestController {
     private final QuestionService questionService;
     private final AnswerService answerService;
     private final UserService userService;
@@ -40,9 +38,41 @@ public class AnswerController {
         Question question = this.questionService.getQuestion(id);
         SiteUser siteUser = this.userService.getUser(principal.getName());
 
-        this.answerService.create(question, answerForm.content, siteUser);
+        this.answerService.create(question, answerForm.getContent(), siteUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(new HashMap<String, String>() {{
             put("message", "success");
         }});
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/modify/{id}")
+    public ResponseEntity<HashMap<String, String>> answerModify(AnswerForm answerForm, BindingResult bindingResult, @PathVariable("id") Integer id, Principal principal) {
+        HashMap<String, String> message = new HashMap<>();
+        if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(v -> message.put("message", v.getDefaultMessage()));
+            return ResponseEntity.badRequest().body(message);
+        }
+
+        Answer answer = this.answerService.getAnswer(id);
+        if (!answer.getAuthor().getUsername().equals(principal.getName())) {
+            message.put("message", "수정 권한이 없습니다.");
+        }
+
+        answerService.modify(answer, answerForm.getContent());
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/delete/{id}")
+    public ResponseEntity<HashMap<String, String>> answerDelete(@PathVariable("id") Integer id, Principal principal) {
+        HashMap<String, String> message = new HashMap<>();
+        Answer answer = this.answerService.getAnswer(id);
+        if (!answer.getAuthor().getUsername().equals(principal.getName())) {
+            message.put("message", "삭제 권한이 없습니다.");
+        }
+
+        this.answerService.delete(answer);
+        return ResponseEntity.ok().build();
     }
 }

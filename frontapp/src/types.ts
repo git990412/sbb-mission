@@ -5,6 +5,7 @@ export type Question = {
   createDate: Date;
   author: { username: string };
   answerList: Answer[];
+  modifyDate: Date;
 };
 
 export type Answer = {
@@ -12,6 +13,7 @@ export type Answer = {
   content: string;
   createDate: Date;
   author: { username: string };
+  modifyDate: Date;
 };
 
 export type Err = {
