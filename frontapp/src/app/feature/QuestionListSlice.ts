@@ -17,12 +17,23 @@ const initialState: QuestionListState = {
   currentPage: 0,
 };
 
+type SearchParams = {
+  page: number;
+  kw: string;
+};
+
+const initialSearchParams: SearchParams = {
+  page: 0,
+  kw: "",
+};
+
 export const updateQuestions = createAsyncThunk(
   "api/question/list",
-  async (page: number = 0) => {
+  async (searchParams: SearchParams = initialSearchParams) => {
     const response = await axios.get("/api/question/list", {
       params: {
-        page: page,
+        page: searchParams.page,
+        kw: searchParams.kw,
       },
     });
     return response.data;

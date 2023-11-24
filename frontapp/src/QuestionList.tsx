@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "./app/hooks.ts";
 import {
   selectCurrentPage,
@@ -33,8 +33,10 @@ const QuestionList = () => {
   };
 
   useEffect(() => {
-    dispatch(updateQuestions(0));
+    dispatch(updateQuestions({ page: 0, kw: "" }));
   }, []);
+
+  const [kw, setKw] = useState<string>("");
 
   return (
     <>
@@ -73,17 +75,39 @@ const QuestionList = () => {
             })}
           </tbody>
         </table>
-        <div className="join mb-5">
+        <div className="join">
+          <div>
+            <div>
+              <input
+                className="input input-bordered join-item"
+                placeholder="Search"
+                onChange={(e) => {
+                  setKw(e.target.value);
+                }}
+                value={kw}
+              />
+            </div>
+          </div>
+          <div className="indicator">
+            <button
+              className="btn join-item"
+              onClick={() => {
+                dispatch(updateQuestions({ page: 0, kw: kw }));
+              }}
+            >
+              Search
+            </button>
+          </div>
+        </div>
+        <div className="join my-5">
           <button
             className={`join-item btn`}
             onClick={() => {
               if (currentPage > 0) {
-                dispatch(updateQuestions(currentPage - 1));
+                dispatch(updateQuestions({ page: currentPage - 1, kw: "" }));
               }
             }}
-          >
-            «
-          </button>
+          ></button>
           {Array(totalPages)
             .fill(0)
             .map((_v, i) => {
@@ -93,7 +117,9 @@ const QuestionList = () => {
                     className={`join-item btn ${
                       currentPage == i ? "btn-active" : ""
                     }`}
-                    onClick={() => dispatch(updateQuestions(i))}
+                    onClick={() =>
+                      dispatch(updateQuestions({ page: i, kw: "" }))
+                    }
                     key={i}
                   >
                     {i}
@@ -103,7 +129,9 @@ const QuestionList = () => {
             })}
           <button
             className="join-item btn"
-            onClick={() => dispatch(updateQuestions(currentPage + 1))}
+            onClick={() =>
+              dispatch(updateQuestions({ page: currentPage + 1, kw: "" }))
+            }
           >
             »
           </button>
