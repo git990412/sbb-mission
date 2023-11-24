@@ -5,6 +5,8 @@ import { Err, Question } from "./types.ts";
 import QuestionModifier from "./components/QuestionModifier.tsx";
 import AnswerModifier from "./components/AnswerModifier.tsx";
 import timestamp from "./util/timestamp.ts";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const TextBox = (props: { children: ReactNode }) => {
   return (
@@ -35,8 +37,9 @@ const QuestionDetail = () => {
       .post(`/api/answer/create/${param.index}`, null, {
         params: { content: content },
       })
-      .then(() => {
+      .then((res) => {
         getQuestionById();
+        navigate(`/question/detail/${param.index}#${res.data.message}`);
       })
       .catch((error) => {
         setErr({
@@ -127,9 +130,11 @@ const QuestionDetail = () => {
         <div className="divider" />
         {question?.answerList.map((answer) => {
           return (
-            <div className="flex flex-col">
+            <div className="flex flex-col" id={answer.id.toString()}>
               <TextBox>
-                <p>{answer.content}</p>
+                <Markdown remarkPlugins={[remarkGfm]}>
+                  {answer.content}
+                </Markdown>
                 <div className="flex justify-between items-center mt-5">
                   <div>
                     <button

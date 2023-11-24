@@ -5,6 +5,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { selectStatus, setLogin } from "../app/feature/LoginStatus.ts";
 import { useAppSelector } from "../app/hooks.ts";
+import { useNavigate } from "react-router-dom";
 
 const MenuItem = (props: {
   children: ReactNode | undefined;
@@ -31,6 +32,7 @@ const Navbar = () => {
   const [hidden, setHidden] = useState(true);
   const dispatch = useDispatch();
   const Login = useAppSelector(selectStatus);
+  const navigate = useNavigate();
 
   return (
     <div className="navbar bg-base-100 relative left-0 right-0 shadow-md">
@@ -81,7 +83,13 @@ const Navbar = () => {
         } flex-col shadow-md w-full top-full right-0 left-0 z-20 bg-white`}
         onMouseLeave={() => setHidden(true)}
       >
-        <MenuItem>List</MenuItem>
+        <MenuItem
+          onClick={() => {
+            navigate("/question/list");
+          }}
+        >
+          List
+        </MenuItem>
         <MenuItem
           onClick={() => {
             (document.getElementById("loginModal") as any).showModal();

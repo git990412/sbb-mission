@@ -38,9 +38,10 @@ public class AnswerRestController {
         Question question = this.questionService.getQuestion(id);
         SiteUser siteUser = this.userService.getUser(principal.getName());
 
-        this.answerService.create(question, answerForm.getContent(), siteUser);
+        Answer answer = this.answerService.create(question, answerForm.getContent(), siteUser);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(new HashMap<String, String>() {{
-            put("message", "success");
+            put("message", answer.getId().toString());
         }});
     }
 
